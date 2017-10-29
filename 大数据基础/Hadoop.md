@@ -76,4 +76,40 @@ Hadoop1.2.1
 ![](images/HDFS写流程.png)
 
 1. HDFS文件权限
-2. 安全模式：完成一个初始化的工作 -->
+2. 安全模式：完成一个初始化的工作 -->[]()
+
+## Hadoop的hdf分布式文件系统
+
+1. 在官网下载Hadoop安装包（hadoop-1.2.1.tar.gz）
+2. 解压并配置core_site.xml文件
+3. 参考：
+- [Hadoop1.2.1详细配置与相关问题讲解](http://m.blog.csdn.net/lht_okk/article/details/77493945)
+
+- [JAVE_HOME is not set](http://blog.csdn.net/sprintfwater/article/details/8791741)
+
+4. 文件拷贝命令：scp -r ./conf/* root@node3:~/hadoop-1.2.1/conf/
+
+5. 格式化namenode:进入bin目录下，执行命令：./hadoop namenode -format，其在相应的目录下生成相应的文件
+
+6. ./start-dfs.sh，启动dfs
+
+7. jps命令查看是否启动了dfs
+
+8. 关闭防火墙：service iptable stop或者systemctl stop firewalld
+
+9. 配置域名解析
+
+10. 在本地通过浏览器访问：http://node1:50070
+
+## Hadoop的mapreduce分布式计算框架（适合于离线计算，strom适合流式计算，实时计算，spark适合在内存中做计算，快速得到计算结果）
+
+### MapReduce设计理念
+
+- 移动计算，而不是移动数据
+- 计算框架MR
+
+![](images/MapReduce计算框架.png)
+
+- 其中，split0、split1、split2为一个一个的文件碎片
+- 分为四个步骤：
+  - 原始数据经过spli后被切换成多个文件片段t、map
