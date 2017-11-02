@@ -112,4 +112,24 @@ Hadoop1.2.1
 
 - 其中，split0、split1、split2为一个一个的文件碎片
 - 分为四个步骤：
-  - 原始数据经过spli后被切换成多个文件片段t、map
+  - 原始数据经过spli后被切换成多个文件片段（数据片段），多个片段并发执行，
+  - 一个数据片段经过map过程：一个键值对的形式，统计一个单词出现的次数
+  - shuffling过程，把建相同的单词合并到一起
+  - reduce过程
+
+![](images/MapReduce计算框架.png)
+
+### Hadoop计算框架Shuffler
+
+- 在mapper和reduce中间的一个步骤
+
+
+- map解决数据倾斜和数据负载均衡的问题
+- 使用字典进行排序
+- map(映射)、reduce(化简)
+- MapReduce的split大小
+
+
+## MapReduce的架构
+
+- 一主多从的架构​
