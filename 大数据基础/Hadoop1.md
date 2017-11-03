@@ -282,3 +282,71 @@ Hadoop配置模式
 
 ![](images/Hadoop2.0产生背景.png)
 
+云的概念
+
+大数据
+
+云存储
+
+NO-SQL
+
+数据的时代
+
+## Hadoop2.x
+
+- 解决问题
+
+  - 海量数据的存储（HDFS）
+
+
+  - 海量数据的分析（MapReduce，分析的模型，成为reduce程序）spark、storm
+
+
+  - 资源管理调度（YARN）
+
+
+- hadoop是由多个技术架构构成的，分布式运行，分布式计算
+
+
+- hadoop擅长海量的离线数据分析
+
+- hadoop怎么解决海量数据的存储？
+
+- hadoop版本选择和伪分布式安装
+
+- 关闭图形界面，使用命令init 3即可，并修改其配置文件（/etc/inittab文件）
+
+- 让普通用户具备sudo执行权限，在/etc/sudoers文件中加入
+
+  ```
+  root    ALL=(ALL)       ALL
+  hadoop  ALL=(ALL)       ALL
+  ```
+
+- 修改主机名/etc/sysconfig/network，设置hostname node1，设置立即生效，使用exit退出
+
+- 设置域名解析
+
+- 安装jdk
+
+- 使用alt+p快捷键，执行put 路径
+
+- 配置java环境变量，/etc/profile针对所有的用户都生效，最后执行source /etc/profile
+
+- 配置各个配置文件
+
+- 关闭防火墙
+
+- HDFS的实现思想：
+
+  1、通过分布式集群来存储文件，为客户端提供了便捷的虚拟目录树
+
+  2、文件存储到hdfs集群中去的时候是被切分成block的
+
+  3、文件的block存放在若干台dataname节点
+
+  4、hds文件系统的文件于真实的block之间由映射关系，由namenode管理
+
+  5、每个block在集群中会存储多个副本，可以提高数据的可靠性，提高并发能力
+
+- HDFS的shell操作，不支持修改
