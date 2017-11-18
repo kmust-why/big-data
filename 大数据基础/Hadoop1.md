@@ -350,3 +350,108 @@ NO-SQL
   5、每个block在集群中会存储多个副本，可以提高数据的可靠性，提高并发能力
 
 - HDFS的shell操作，不支持修改
+
+- ssh免密码登陆
+
+- 由namenode负责副本的分配
+
+- 若文件为一个个的小文件，则会浪费空间，mapreduce效率也会降低
+
+- 元数据存储到namenode的内存中
+
+- namenode如何管理元数据，加入一个edits log文件
+
+1、客户端上传文件时，NN首先往edits log文件中记录元数据操作日志
+
+2、客户端开始上传文件，完成后返回成功信息给NN，NN就在内存中写入这次上传操作新产生的元数据信息
+
+3、每当edits log写满时，需要将这段时间新的元数据刷新到fsimage文件中去
+
+4、NN通知SN进行checkpoint操作
+
+5、datanode提供真实文件数据的存储服务。
+
+6、startx直接在控制台下运行界面即可
+
+7、添加相应的依赖包
+
+- namenode的职责：维护元数据信息
+- 维护hdfs的目录树
+
+8、RPC即为两个进制之间的调用，远程过程调用，节点之间的通信是靠RPC机制来实现的，进程之间的远程调用
+
+9、datanode定期向namenode汇报自己的情况
+
+10、RPC机制主要利用动态站点和反射的机制
+
+## Mapduce框架、运算框架（运算模型）
+
+map:数据简单的处理工作（局部处理）
+
+reduce:数据汇总（全局处理）
+
+- mapreduce可以运行在本地，但在windows下可能会因为兼容性的问题而出错，但在linux下不会出问题。
+- hadoop jar命令是将jar包和其他的一些附加信息提交到集群中去的。
+- mapreduce的运作机制
+- YARN框架是用来做资源调度的
+- MRAppMaster进程用来管理MapReduce框架的
+
+1、mr程序的几种提交运行模式
+
+- 本地模式运行
+- 集群模式运行（直接使用hadoop的命令即可）
+
+2、mapreduce框架的全貌
+
+- inputformat负责文件的切片
+- 其中inputformat是一个接口
+
+3、zookeeper，是一个分布式的协调服务，提供少量数据的存储和管理，把数据的同步处理。
+
+- 高可用性
+- 提供分布式锁服务，
+- 启动zookeeper，使用命令./zkServer.sh start启动即可。
+- 查看该进程命令为：netstat -nltp | grep 2181
+- 查看该进程的状态./zkServer.sh status
+- ./zkCli.sh表示本地登录到zookeeper集群中去
+- zookeeper管理客户所存放的数据采用的是类似于文件树的结构
+- 每一个节点叫做一个node
+- ls / 查看根节点
+- create /node1 1000 表示创建一个子节点，并向其中写入数字1000
+- get /node1获取该节点下的内容
+- set /node1 1005修改该节点下的内容
+- 杀死一个进程kill -9 2355
+- zookeeper至少要有两个节点才可以，死了一个，不影响其他的数据
+- 有两种类型，短暂的和持久的
+- HA架构：设置了两个NN节点，但是同一个时刻只能有一个NN在对外提供服务。
+- 两个NN必须保持元数据的一致性。
+- qjiurnal用于管理edits文件，其依赖于zookeeper实现的。
+- zkfc用于管理NN并监控NN。
+- 每两个NN构成一个Federation(联邦)
+- 使用7台机器
+- 1 namenode zkfc
+- 2 namenode zkfc
+- 3 resourcemanager
+- 4 resourcemanager
+- 5 zookeeper journalnode datanode nodemanageer
+- 6 5 zookeeper journalnode datanode nodemanageer
+- 7 6 5 zookeeper journalnode datanode nodemanageer
+- 启动第二个resourcemanager，yarn-daemon.sh start resourcemanager
+- HA机制的hadoop
+- 启动第二个namenode,
+- 手动切换namenode的状态
+
+
+![](images/手动切换namenode.png)
+
+![](images/手动切换namenode2.png)
+
+- main方法详解
+- main方法是由jvm调用的
+- Hive:海量数据的查询与管理（类似于数据库），可以不需要懂java，只需要懂sql即可。
+- Hive的工作原理：把sql语言转换成mapreduce程序。
+- 注意：hive不是集群，其不支持一条一条的操作数据，不能插入数据。
+- 建立文件与表之间的映射关系。
+- hbase是一个基于hdfs的数据库，属于nosql数据库，一个巨大的表，有上亿条数据
+- hbase表的结构。hbase的寻址机制。
+- 在node3上配置hbase
