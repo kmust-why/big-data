@@ -455,3 +455,7 @@ reduce:数据汇总（全局处理）
 - hbase是一个基于hdfs的数据库，属于nosql数据库，一个巨大的表，有上亿条数据
 - hbase表的结构。hbase的寻址机制。
 - 在node3上配置hbase
+
+## strom
+
+- 在线的实时计算框架
