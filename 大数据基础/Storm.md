@@ -51,3 +51,9 @@ nohup ./storm supervisor 1>/dev/null 2>&1 &
 storm程序：
 1、spout负责获取数据和将数据发送给下个组件
 2、toplogies提交到集群中去。
+
+![](images/storm.png)
+
+![](images/storm1.png)
+
+![](images/storm2.png)
