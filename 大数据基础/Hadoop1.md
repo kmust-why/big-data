@@ -459,3 +459,105 @@ reduce:数据汇总（全局处理）
 ## strom
 
 - 在线的实时计算框架
+
+
+
+ssh：远程登陆的安全外壳协议
+	有两种身份验证机制
+	1、用户名+密码验证
+	2、密钥验证
+
+hadoop:
+1、hadoop中的很多工具
+2、应用：网站或者APP点击流日志数据挖掘系统
+3、分布式系统 数据的预处理
+4、数据模型
+5、业务模型
+6、推荐系统的架构
+7、sql统计模型
+8、批处理：一批一批的文件处理
+9、典型推荐系统架构
+10、大数据平台 网站日志分析系统
+
+hadoop部署：
+1、hdfs集群部署：负责文件的读写
+2、yarn集群：负责为mapreduce程序分配运行的一些资源，并运行该mapreduce程序
+3、将运算移动到数据端
+4、将datanode和node manager应该放到一起
+5、配置通过配置文件来完成
+6、core.xml 配置那个是namenode和客户端连接时候的端口，工作进程的目录等
+7、hdfs文件系统在linux的文件系统之上
+
+hadoop命令：
+1、hadoop fs -mkdir -p /wordcount/input 创建目录
+2、hadoop jar hadoop-mapreduce-examples-2.4.1.jar wordcount /wordcount/input /wordcount/ouput 运行mapreduce程序
+3、hdfs的java客户端需要一个身份
+4、ntp时间同步服务器 设置时间的命令：date -s "2017-12-31 12:06:00"
+5、hdfs namenode -format只是初始化了namenode的工作目录，而datanode的工作目录是在data
+node启动后自己初始化的
+6、datanode不能被namenode识别的问题
+答：namenode在format初始化的时候会形成两个标识：blockPoolId clusterid
+新的datanode加入的时候，会获取这两个标识作为自己工作目录中的标识，一旦namenode重
+新format以后，namenode的身份标识符已经改变，而dataname还是持有原来的标识，则不能被namenode识别，解决方法是删除dataname的工作目录后，重新启动dataname
+7、dataname不是一下线就被namenode认为下线的。这个有一个超时时间的问题。
+8、副本数由客户端的参数replication决定
+9、以chunk512个字节为基本单位进行校验的
+10、查看元数据的请求和更新元数据的请求
+11、内存的镜象：把内存中的对象序列化后写入文件
+12、secondary namenode负责对namenode的元数据进行image镜象文件的管理
+13、默认情况下30分钟checkpoint一次
+14、hdfs不适合存取小文件
+15、打印集群的状态，命令hdfs dfsadmin -report
+16、获取指定大小的文件：用流的方式来指定获取文件的大小
+
+通过流的方式上传文件到hdfs
+1、使用linux开发，省去了各种的环境问题
+2、不用关心RPC通信的具体细节
+3、数据的持久化
+4、并发运行
+5、用户的浏览行为
+
+hadoop的hdfs的java编程：
+1、文件系统的元数据
+2、离线部分写sql
+
+mapreduce编程框架：
+1、两个阶段：局部的计算和去全局的计算
+2、第一个阶段的并发task实例各自运行，互不相干，完全独立运行
+3、第二个阶段的并发task实例互不相干，但是他们的数据依赖于上一个阶段的所有task并发实例的输出
+4、该编程模型只能包含一个map和一个reduce阶段，如果用户的业务逻辑非常复杂，则需要多个mapreduce
+
+map逻辑：
+1、读数据
+2、按行处理数据
+3、按空格切割行内单词
+4、hashmap(单词，value+1)
+5、等分给自己的数据片全部读完之后
+6、将hashmap按照首字母范围分为3个hashmap
+7、将3个hashmap传给3个reduce task
+8、序列化hashmap
+
+若干复杂的细节问题：
+1、map task如何进行任务分配
+2、reduce task如何分配要处理的任务
+3、map task和reducetask之间如何衔接
+4、maptask运行失败，如何处理
+5、maptask自己负责输出数据的分区？
+
+参数说明：
+1、KEYIN:默认情况下，是mr框架所读到的一行文本的起始偏移量 long 使用hadoop中自带的序列话工具，不使用long，而是使用longwritable
+2、VALUEIN:默认情况下，是mr框架所读到的一行文本的内容，string
+3、KEYOUT：用户自定义逻辑处理完成之后输出数据中的key,在此处是单词 string
+4、VALUEOUT：用户自定义逻辑处理完成之后输出数据中的values,在此处是单词 integer
+
+
+提交job:
+1、java -cp wordcountjar.jar cn.why.hadoop.mapreduce.WordCountDriver 不推荐使用该种方法
+2、reducetask需要等待maptask运行完成后采取运行
+3、序列化：把一个对象转换成字节数据存储起来
+
+
+maptask的并行度的决定因素：
+1、根据切片的数量来决定maptask的个数
+2、任务切片是一个逻辑划分
+3、一个切片就对应一个maptask实例
