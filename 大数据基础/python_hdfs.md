@@ -427,3 +427,39 @@ stm32:（I2C通信）
 1、一问一答的形式
 2、串行总线
 3、使用STM32模拟I2C通信
+
+
+
+将map输出的数据分为6个区：
+1、重写partioner,让相同归属地的号码返回相同的分区号int
+2、在使用combiner的时候需要注意不能影响后面的逻辑
+
+关于大量小文件的优化策略：
+1、任务切片是在客户端完成的
+
+yarn:资源（运算资源：运算程序jar，配置文件，cpu,内存等）调度系统
+1、节点：就是一个机器
+2、yarn的一个客户端于yarn进行通信
+3、首先客户端向resource manager申请提交一个application
+4、resource manager返回application资源提交的一个路径：hdfs://home../.staging以及application.id
+5、然后客户端提交job运行所需的资源文件到hdfs上，其中的资源文件包括 job.split,job.xml,wordcount.jar等资源文件
+6、客户端告诉resource manager资源提交完毕，申请运行一个mrappmaster
+7、resource manager将用户的请求初始化一个task对象，并将该task任务放入队列系统中去
+8、name manager会通过心跳机制去领取一个任务，并根据该任务的描述信息生成一个容器（container,该容器中有一定的CPU和内存）
+9、name manager会从hdfs中下载所需要的配置文件到该容器中，还有jar资源到本地,并在该容器中运行mrappmaster进程（作为程序的主管），mrappmaster读取job的信息
+10、mrappmaster作为resource manager的一个客户端向其发送请求，申请运行map task的容器，然后重复7之后的步骤
+11、在相应的容器中运行yanrchild进程
+12、领取完任务以后，mrappmaster向其发送一个启动命令
+13、至此，mrappmaster接管maptask
+14、当maptask完成后，mrappmaster又重新向resource manager申请运行reduce任务（向mr申请3个容器运行reduce task）
+15、最后mrappmaster向相应的reducetask发送一个启动命令
+16、reduce端向map端获取相应分区的数据
+17、application运行完毕后向，mrappmaster向resource manager请求注销自己
+18、yarn:只负责程序运行所需的资源的分配、回收等调度问题
+
+hadoop1.x版本存在的问题：运算与资源的调度耦合到了一起
+
+
+mapreduce的运行模式：
+1、本地模式：不用配置的时候默认是fil:///
+2、集群模式:就是把程序提交到yarn中去运行
